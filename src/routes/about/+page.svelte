@@ -1,7 +1,7 @@
 <h1>Ce que je dois faire</h1>
 <h6>du 26-07-2023 au 26-08-2023</h6>
 
-<p>voici le lien pou mieux comprendre les usages de svelte : https://svelte.dev/examples/component-events</p>
+<p>voici le lien pou mieux comprendre les usages de svelte : <a href="https://svelte.dev/examples/component-events">lien</a> </p>
 
 
 <h3>Semaine 0</h3>
