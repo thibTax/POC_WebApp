@@ -1,20 +1,21 @@
-<h1>Ce que je dois faire</h1>
-<h6>du 26-07-2023 au 26-08-2023</h6>
+<div class="mx-4">
+<h1 class="my-2">Ce que je dois faire</h1>
+<h6 class="my-2">du 26-07-2023 au 26-08-2023</h6>
 
-<p>voici le lien pou mieux comprendre les usages de svelte : <a href="https://svelte.dev/examples/component-events">lien</a> </p>
+<p class="my-2">voici le lien pou mieux comprendre les usages de svelte : <a href="https://svelte.dev/examples/component-events">lien</a> </p>
 
 
-<h3>Semaine 0</h3>
-<ul>
-    <li>1er Faire la page d'acceuil </li>
-    <li>2e Faire la page inscription </li>
-    <li>3e Faire la page connection </li>
-    <li>4e Faire la page forget mdp </li>
+<h3 class="my-2">Semaine 0</h3>
+<ul class="my-2">
+    <li class="line-through">1er Faire la page d'acceuil </li>
+    <li class="line-through">2e Faire la page inscription </li>
+    <li class="line-through">3e Faire la page connection </li>
+    <li class="line-through">4e Faire la page forget mdp </li>
     <li>5e Ajouter au projet firebase </li>
 </ul>
 
-<h3>Semaine 1</h3>
-<ul>   
+<h3 class="my-2">Semaine 1</h3>
+<ul class="my-2">   
     <li>6e Créer une bdd (login) firebase </li>
     <li>7e Connecter la bdd firebase au POC_WebApp </li>
     <li>8e Créer une page Details </li>
@@ -22,8 +23,8 @@
     <li>10e Connecter la bdd firebase au POC_WebApp </li>
 </ul>
 
-<h3>Semaine 2</h3>
-<ul>   
+<h3 class="my-2">Semaine 2</h3>
+<ul class="my-2">   
     <li>11e Créer une maket figma et Compléter la document du projet (toujours faire comme si un nouveau membre devait reprendre le projet seul) </li>
     <li>12e Sécuriser si possible </li>
     <li>13e Gérer la tokenisation </li>
@@ -32,11 +33,11 @@
 </ul>
 
 
-<h3>En parallèle</h3>
-<ul>   
+<h3 class="my-2">En parallèle</h3>
+<ul class="my-2">   
     <li>Ecrire le spitch du projet</li>
 </ul>
-<p>[Introduction]
+<p class="my-2">[Introduction]
 
     Chers passionnés d'automobiles et propriétaires de véhicules, j'ai le plaisir de vous présenter une révolution dans la gestion de vos précieux biens sur quatre roues. Nous sommes fiers de vous dévoiler notre toute nouvelle application web, conçue pour faciliter votre expérience automobile tout en vous offrant une palette complète d'outils essentiels. Bienvenue dans l'univers de "VéhiculePro+."
     
@@ -69,3 +70,5 @@
     [Conclusion]
     
     Avec "VéhiculePro+," vous bénéficiez d'un guichet unique pour gérer tous les aspects liés à votre véhicule. De la gestion administrative à l'aide à la transaction, notre application vous simplifie la vie d'automobiliste. Soyez prêt à vivre une expérience automobile plus fluide, plus connectée et plus rassurante que jamais. Téléchargez dès maintenant "VéhiculePro+" et prenez le volant en toute sérénité. Merci de nous rejoindre dans cette aventure automobile révolutionnaire !</p>
+
+</div>

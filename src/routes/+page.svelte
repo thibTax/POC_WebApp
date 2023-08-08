@@ -3,6 +3,23 @@
 
     import Product from './components/product.svelte'
     import Features from './components/features.svelte';
+    import ModalComponentRegistry from './components/modalComponentRegistry.svelte';
+    import { Modal, modalStore } from '@skeletonlabs/skeleton';
+    import { auth } from '../firebase.js';
+    import { onMount } from 'svelte';
+    import { LightSwitch } from '@skeletonlabs/skeleton';
+
+    let showModal = false;
+
+    function openModal() {
+    showModal = true;
+    }
+
+    function closeModal() {
+    showModal = false;
+    }
+
+    let user=null;
 
     const car ={
         marque:'citroen',
@@ -12,7 +29,7 @@
     };
 
     let cars = [
-        { marque:'Citroen',
+        { marque:'Citroeen',
         modele:'C3 Picasso',
         date: 2012,
         kilometrage:26940, 
@@ -40,9 +57,40 @@
         { name:'Forum', 
         img:'discuter.png'},
     ]
+    
+    onMount(() => {
+    // Add the observer to listen for changes in the authentication state
+    const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
+      user = userAuth; // Update the user variable when the authentication state changes
+    });
+
+    // Return a cleanup function to remove the observer when the component is unmounted
+    return unsubscribe;
+  });
+    async function checkAuth() {
+    const user = auth.currentUser;
+    if (!user) {
+      // Si l'utilisateur n'est pas authentifié, redirigez-le vers la page de connexion
+      window.location.replace('/login');
+    }
+  }
+
+  // Utilisez onMount pour appeler la fonction de vérification d'authentification lors du montage du composant
+  onMount(checkAuth);
+
+  async function signOut() {
+    try {
+      // Mettez en place la déconnexion ici
+      await auth.signOut();
+      window.location.replace('/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion', error);
+    }
+  }
+
 </script>
 
-<div class="bg-white">
+<div class="bg-white relative">
     <h1 class="text-2xl m-2 md:font-semibold md:text-4xl md:mb-6">Carbone</h1>
     <ul class="flex gap-4 m-2 overflow-x-auto inner">
         {#each features as { name, img }, i}
@@ -56,10 +104,22 @@
             <Product {...{marque,modele,date,kilometrage, img}}/>
         {/each}        
    
-         <button class="hidden md:block bg-slate-100 drop-shadow-xl rounded-md w-24  h-24 "><i class="fa-solid fa-circle-plus fa-2xl "></i></button>
+         <button on:click={openModal}  class="hidden md:block bg-slate-100 drop-shadow-xl rounded-md w-24  h-24 "><i class="fa-solid fa-circle-plus fa-2xl "><i></button>
        </ul>
-    <button class="fixed right-8 bottom-8 md:hidden"><i class="fa-solid fa-circle-plus fa-2xl"></i></button>
-</div>
+    <button on:click={openModal} class="fixed right-8 bottom-8 md:hidden"><i class="fa-solid fa-circle-plus fa-2xl"></i></button>
+<ModalComponentRegistry
+    isOpen={showModal}
+    title="My Custom Modal"
+    let:content
+  >
+    <p>This is the content of the modal.</p>
+    <button on:click={closeModal}>Close</button>
+  </ModalComponentRegistry>
+  
+</div><button on:click={closeModal}>X</button>
+<button on:click={signOut}>deconnexion</button>
+<LightSwitch />
+
 
 <style>
     .inner::-webkit-scrollbar {
