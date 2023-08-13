@@ -5,12 +5,69 @@
     import { Stepper, Step } from '@skeletonlabs/skeleton';
     import PageOne from './pageOne.svelte';
 	import PageTwo from './pageTwo.svelte';
-  
+    import { getFirestore, collection, addDoc } from 'firebase/firestore';
+    import { auth, firestore } from '../../firebase';
+
+
+    let nameAgence = 'edzdv';
+    let numberClient = '2921';
+    let yearSub ='2932';
+    let contrtact ='tout risque'
+    let kilometrage = '3949';
+    let color = 'dzazdazdza';
+    let year ='2012';
+    let model ='jden';
+    let brand ='Citroen';
+    let img = './montagnes.png'
+    let receivedData1 = {};
+    let receivedData2 = {};
+    let receivedData= {};
+
+    // Utilisateur est authentifié ?
+    /**
+	 * @type {string | null}
+	 */
+    let currentUserId = null;
+        // Écouteur pour les changements d'état d'authentification
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUserId = user.uid; // Récupère l'ID utilisateur
+            } else {
+                currentUserId = null;
+            }
+            
+        });
+      
+   
+
     const dispatch = createEventDispatcher();
   
     export let isOpen = false;
-   
-  
+
+    async function addProduct() {
+    
+         // Enregistrez les informations supplémentaires de l'utilisateur dans Firestore
+            try {
+                const docRef = await addDoc(collection(firestore, "products"), {
+                    currentUserId:currentUserId,
+                    ...receivedData,
+                    // nameAgence,
+                    // numberClient:numberClient,
+                    // yearSub:yearSub,
+                    // contrtact:contrtact,
+                    // kilometrage:kilometrage,
+                    // color:color,
+                    // year:year,
+                    // model,
+                    // brand:brand,
+                     img:img
+                });
+                console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        }
+
    export function closeModal() {
       dispatch('close');
     }
@@ -34,8 +91,26 @@
   });
 
   function onCompleteHandler () {
-    console.log('ok')
+    receivedData = Object.assign({}, receivedData1, receivedData2);
+    addProduct()
     closeModal()
+  }
+
+
+  
+  
+
+  /**
+	 * @param {string} data
+	 */
+  function handleDataFromChild1(data) {
+    receivedData1 = data;
+  }
+  /**
+	 * @param {{}} data
+	 */
+  function handleDataFromChild2(data) {
+    receivedData2 = data;
   }
   </script>
   
@@ -43,13 +118,13 @@
     <div class="bg-slate-800/80 absolute min-h-full z-30 inset-0 ">
         <div class="bg-slate-200/90 min-h-max m-4 rounded-lg p-2 md:w-96 md:mx-auto ">
             <Stepper on:complete={onCompleteHandler}>
-                <Step>
+                <Step stepTerm='Étape'>
                     <svelte:fragment slot="header">Informations véhicule</svelte:fragment>
-                    <PageOne />
+                    <PageOne sendDataToParent={handleDataFromChild1} />
                 </Step>
-                <Step>
+                <Step stepTerm='Étape'>
                     <svelte:fragment slot="header">Informations assurance</svelte:fragment>
-                    <PageTwo />
+                    <PageTwo sendDataToParent={handleDataFromChild2} />
                 </Step>
                 <!-- ... -->
             </Stepper> 

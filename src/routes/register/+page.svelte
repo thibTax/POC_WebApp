@@ -10,7 +10,7 @@
   
 
     let email = 'thibaultaxil@gmail.com';
-    let password = 'dzazdazdza';
+    let password = 'test12';
     let displayName ='d';
     let error = null;
 

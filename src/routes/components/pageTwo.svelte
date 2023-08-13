@@ -1,7 +1,7 @@
 <script>
     // @ts-nocheck
     
-        import { createUserWithEmailAndPassword} from "firebase/auth";
+       
         import { auth, firestore } from '../../firebase.js';
         import { collection, addDoc } from "firebase/firestore"; 
         import { navigate } from 'svelte-routing';
@@ -9,68 +9,77 @@
     
       
     
-        let email = '';
-        let password = '';
-        let displayName ='';
-        let error = null;
-    
-        export async function addProduct() {
-            try {
+        let nameAgence = '';
+        let numberClient = '';
+        let yearSub ='';
+        let contract ='';
+        //let error = null;
+        
+        
+        //========= props child to parent ==========
+        export let sendDataToParent;
+        let dataToSend = {nameAgence,numberClient,yearSub,contract};
+
+        function sendData() {
+            sendDataToParent(dataToSend);
+        }
+        //============= end props ===================
+
+
+        // export async function addProduct() {
+        //     try {
                 
-                const userCredential = await createUserWithEmailAndPassword(auth,email, password);
-               
+                
     
-                // Récupérez l'ID d'utilisateur unique créé par Firebase
-                const userId = userCredential.user.uid;
-    
-                // Enregistrez les informations supplémentaires de l'utilisateur dans Firestore
-                try {
-                    const docRef = await addDoc(collection(firestore, "users"), {
-                        first: displayName,
-                    });
-                    console.log("Document written with ID: ", docRef.id);
-                } catch (e) {
-                    console.error("Error adding document: ", e);
-                }
-                 //navigate('/');
-                 window.location.replace('/');
+        //         // Enregistrez les informations supplémentaires de l'utilisateur dans Firestore
+        //         try {
+        //             const docRef = await addDoc(collection(firestore, "users"), {
+        //                 first: displayName,
+        //             });
+        //             console.log("Document written with ID: ", docRef.id);
+        //         } catch (e) {
+        //             console.error("Error adding document: ", e);
+        //         }
+        //          //navigate('/');
+        //          window.location.replace('/');
     
     
     
-                // await firestore.collection('utilisateurs').doc(userId).set({
-                //     prenom:prenom
-                // //   displayName: 'Nom d\'utilisateur',
-                // //   photoURL: 'url-de-la-photo',
-                // //   // Autres informations d'utilisateur
-                // });
+        //         // await firestore.collection('utilisateurs').doc(userId).set({
+        //         //     prenom:prenom
+        //         // //   displayName: 'Nom d\'utilisateur',
+        //         // //   photoURL: 'url-de-la-photo',
+        //         // //   // Autres informations d'utilisateur
+        //         // });
     
-                // L'utilisateur est maintenant inscrit avec succès et ses informations sont enregistrées dans Firestore
-            } catch (error) {
-                console.error('Erreur lors de l\'inscription', error);
-                // Stocker le message d'erreur pour l'afficher à l'utilisateur
-                const errorMessage = error.message;
-            }
-        }          
+        //         // L'utilisateur est maintenant inscrit avec succès et ses informations sont enregistrées dans Firestore
+        //     } catch (error) {
+        //         console.error('Erreur lors de l\'inscription', error);
+        //         // Stocker le message d'erreur pour l'afficher à l'utilisateur
+        //         const errorMessage = error.message;
+        //     }
+        // }          
     </script>  
 
         <form class="flex flex-col align-items-center justify-center "> 
-            <div class="flex flex-col gap-4 py-2 px-4  mx-auto">
+            <div class="flex flex-col gap-4 py-2 mx-8">
                 <label class="label ">
                     <span class="text-xs text-secondary-500">Nom agence</span>
-                    <input type="text" class="input rounded-lg bg-slate-50" title="lastname" placeholder="Nom" />
+                    <input bind:value={dataToSend.nameAgence} type="text" class="input rounded-lg bg-slate-50" title="nameAgence" placeholder="Nom agence" />
                 </label>
                 <label class="label ">
                     <span class="text-xs text-secondary-500">Numéro client</span>
-                    <input bind:value={displayName} class="input rounded-lg  bg-slate-50" title="name" type="text" placeholder="Prénom" />
+                    <input bind:value={dataToSend.numberClient} class="input rounded-lg  bg-slate-50" title="numberClient" type="text" placeholder="Numéro client" />
                 </label>
                 <label class="label ">
                     <span class="text-xs text-secondary-500">Année souscription</span>
-                    <input type="email" bind:value={email} class="input rounded-lg  bg-slate-50" title="email" placeholder="Email" />
+                    <input type="text" bind:value={dataToSend.yearSub} class="input rounded-lg  bg-slate-50" title="yearSub" placeholder="Année souscription" />
                 </label>
                
                 <label class="label ">
-                    <span class="text-xs text-secondary-500">Type de contrat</span>
-                    <input class="input rounded-lg  bg-slate-50" title="password" type="text" placeholder="Mot de passe" />
+                    <span class="text-xs text-secondary-500">Type contrat</span>
+                    <input bind:value={dataToSend.contract} class="input rounded-lg  bg-slate-50" title="contract" type="text" placeholder="Type contrat" />
                 </label>
+                <button on:click={sendData} class="w-full bg-secondary-500 rounded-md p-2 mt-4 text-white">Enregistrer</button>
             </div>       
-        </form>
+        </form >

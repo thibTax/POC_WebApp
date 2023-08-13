@@ -5,11 +5,15 @@
     import Features from './components/features.svelte';
     import ModalComponentRegistry from './components/modalComponentRegistry.svelte';
     import { Modal, modalStore } from '@skeletonlabs/skeleton';
-    import { auth } from '../firebase.js';
+    import { auth, firestore } from '../firebase.js';
     import { onMount } from 'svelte';
     import { LightSwitch } from '@skeletonlabs/skeleton';
+    import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+
+    let currentUserId = null;
 
     let showModal = false;
+    let products=[];
 
     function openModal() {
     showModal = true;
@@ -57,26 +61,35 @@
         { name:'Forum', 
         img:'discuter.png'},
     ]
+
+    
     
     onMount(() => {
-    // Add the observer to listen for changes in the authentication state
-    const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
-      user = userAuth; // Update the user variable when the authentication state changes
+        const unsubscribe =  auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Utilisateur connecté, faites quelque chose
+                currentUserId=user.uid
+                loadProducts()
+            } else {
+                // Aucun utilisateur connecté, faites quelque chose
+                //window.location.replace('/login');
+                console.log('Aucun utilisateur connecté');
+            }
+            return () => {
+                unsubscribe(); // Nettoie l'écouteur lorsque le composant est détruit
+            };
+        })
     });
 
-    // Return a cleanup function to remove the observer when the component is unmounted
-    return unsubscribe;
-  });
-    async function checkAuth() {
-    const user = auth.currentUser;
-    if (!user) {
-      // Si l'utilisateur n'est pas authentifié, redirigez-le vers la page de connexion
-      window.location.replace('/login');
-    }
-  }
 
-  // Utilisez onMount pour appeler la fonction de vérification d'authentification lors du montage du composant
-  onMount(checkAuth);
+    // ****************a ajouter pour plus de sécurité*****************
+//     async function checkAuth() {
+//     const user = auth.currentUser;
+//     if (!user) {
+//       // Si l'utilisateur n'est pas authentifié, redirigez-le vers la page de connexion
+//       window.location.replace('/login');
+//     }
+//   }
 
   async function signOut() {
     try {
@@ -86,6 +99,23 @@
     } catch (error) {
       console.error('Erreur lors de la déconnexion', error);
     }
+  }
+  async function loadProducts() {
+    const productsRef = collection(firestore, 'products');
+    
+
+    // Utilisez la clause where pour filtrer par l'ID de l'utilisateur
+    const q = query(productsRef, where('currentUserId', '==', currentUserId ));
+
+    const querySnapshot = await getDocs(q);
+    products = []; // Réinitialiser le tableau avant de l'alimenter
+    products = querySnapshot.docs.map(doc => doc.data());
+    // querySnapshot.forEach((doc) => {
+    //   // Récupérer les données du document
+    //   const productData = doc.data();
+    //   // Ajouter les données au tableau des produits
+    //   products.push(productData);
+    //});
   }
 
 </script>
@@ -97,27 +127,31 @@
             <Features {...{name,img}}/>
         {/each} 
     </ul>
-    
     <ul class="mx-2 my-8  flex flex-wrap gap-8 items-center"> 
-        
-        {#each cars as { marque, modele, date, kilometrage, img }, i}
-            <Product {...{marque,modele,date,kilometrage, img}}/>
-        {/each}        
-   
-         <button on:click={openModal}  class="hidden md:block bg-slate-100 drop-shadow-xl rounded-md w-24  h-24 "><i class="fa-solid fa-circle-plus fa-2xl "><i></button>
-       </ul>
-    <button on:click={openModal} class="fixed right-8 bottom-8 md:hidden"><i class="fa-solid fa-circle-plus fa-2xl"></i></button>
+        {#if (products)}
+        {#each products as { brand, model, year, kilometrage,img }, i}
+            <Product {...{brand,model,year,kilometrage,img}}/>
+        {/each}
+        {/if}
+        <!-- {#each cars as { marque, modele, date, kilometrage, img }, i}
+        <Product {...{marque,modele,date,kilometrage, img}}/>
+    {/each}       -->
+        <button on:click={openModal}  class="hidden md:block bg-slate-100 drop-shadow-xl rounded-md w-24  h-24 "><i class="fa-solid fa-circle-plus fa-2xl "><i></button>
+    </ul>
+<button on:click={openModal} class="fixed right-8 bottom-8 md:hidden"><i class="fa-solid fa-circle-plus fa-2xl"></i></button>
 <ModalComponentRegistry
     isOpen={showModal}
-    title="My Custom Modal"
+    title="add product"
     let:content
+    on:close={closeModal}
   >
     <p>This is the content of the modal.</p>
     <button on:click={closeModal}>Close</button>
   </ModalComponentRegistry>
   
-</div><button on:click={closeModal}>X</button>
-<button on:click={signOut}>deconnexion</button>
+</div>
+
+<button class="bg-error-500 rounded-lg p-2" on:click={signOut}>deconnexion</button>
 <LightSwitch />
 
 
