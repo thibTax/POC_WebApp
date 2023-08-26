@@ -1,6 +1,9 @@
 <div class="mx-4">
 <h1 class="my-2">Ce que je dois faire</h1>
 <h6 class="my-2">du 26-07-2023 au 26-08-2023</h6>
+<h6 class="my-2">je dois faire un modal lorsque je click sur un produit et dessus doit s'affihcer les infos du produit avec un bouton supprimer et un autre modifier</h6>
+
+
 
 <p class="my-2">voici le lien pou mieux comprendre les usages de svelte : <a href="https://svelte.dev/examples/component-events">lien</a> </p>
 

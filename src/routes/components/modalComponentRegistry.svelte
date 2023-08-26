@@ -18,7 +18,7 @@
     let year ='2012';
     let model ='jden';
     let brand ='Citroen';
-    let img = './montagnes.png'
+    let img = './car2.jpg'
     let receivedData1 = {};
     let receivedData2 = {};
     let receivedData= {};
@@ -63,6 +63,7 @@
                      img:img
                 });
                 console.log("Document written with ID: ", docRef.id);
+                window.location.replace('/');
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
@@ -92,8 +93,10 @@
 
   function onCompleteHandler () {
     receivedData = Object.assign({}, receivedData1, receivedData2);
+    console.log(receivedData)
     addProduct()
     closeModal()
+    
   }
 
 
@@ -115,10 +118,11 @@
   </script>
   
   {#if isOpen}
-    <div class="bg-slate-800/80 absolute min-h-full z-30 inset-0 ">
+    <div class="bg-slate-800/80 fixed min-h-full z-30 inset-0 ">
         <div class="bg-slate-200/90 min-h-max m-4 rounded-lg p-2 md:w-96 md:mx-auto ">
-            <Stepper on:complete={onCompleteHandler}>
-                <Step stepTerm='Étape'>
+            <Stepper on:complete={onCompleteHandler} >
+                <Step >
+                    <svelte:fragment slot="navigation"><button class="btn " on:click={closeModal}> <i class="fa-solid fa-arrow-left"></i> <span class="font-semibold">Back </span></button></svelte:fragment>
                     <svelte:fragment slot="header">Informations véhicule</svelte:fragment>
                     <PageOne sendDataToParent={handleDataFromChild1} />
                 </Step>
